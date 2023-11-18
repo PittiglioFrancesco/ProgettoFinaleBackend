@@ -21,6 +21,7 @@ const authMiddleware = (req: Request, resp: Response, next: NextFunction) => {
         req.principal = {
             id: payload.id,
             email: payload.email,
+            roles: payload.roles
         };
 
         next();

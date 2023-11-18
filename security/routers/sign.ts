@@ -28,6 +28,7 @@ router.put("/api/v1/register", (req, resp) => {
     const payload: JwtPayloadId = {
         id: foundUser.id,
         email: foundUser.email,
+        roles: foundUser.roles
     };
 
     const token = sign(payload);

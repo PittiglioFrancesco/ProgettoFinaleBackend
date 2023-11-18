@@ -4,6 +4,7 @@ import { JwtPayload } from "jsonwebtoken";
 export interface JwtPayloadId {
     id: number,
     email: string
+    roles: string[]
 }
 
 export interface Principal {
