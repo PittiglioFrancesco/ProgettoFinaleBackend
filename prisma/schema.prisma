@@ -20,20 +20,20 @@ model User {
 model Profile {
   id Int @id @default(autoincrement())
   username String @unique
-  birthdate BigInt 
+  birthdate String 
   posts Post[]
 
   userId Int @unique
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Post {
   id Int @id @default(autoincrement())
-  createdAt BigInt 
+  createdAt String 
   description String?
   tags PostTag[]
 
-  profileId Int @unique
+  profileId Int
   profile Profile @relation(fields: [profileId], references: [id])
 }
 
