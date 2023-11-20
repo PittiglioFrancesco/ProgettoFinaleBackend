@@ -4,13 +4,11 @@ import { JwtPayload } from "jsonwebtoken";
 export interface JwtPayloadId {
     id: number,
     email: string
-    roles: string[]
 }
 
 export interface Principal {
     id: number,
     email: string,
-    roles?: string[]
 }
 
 declare module "express-serve-static-core" {

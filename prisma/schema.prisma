@@ -14,14 +14,13 @@ model User {
   id Int @id @default(autoincrement())
   email String @unique
   password String
-  role Role @default(USER)
   profile Profile?
 }
 
 model Profile {
   id Int @id @default(autoincrement())
   username String @unique
-  birthdate Int 
+  birthdate BigInt 
   posts Post[]
 
   userId Int @unique
@@ -30,7 +29,7 @@ model Profile {
 
 model Post {
   id Int @id @default(autoincrement())
-  createdAt Int 
+  createdAt BigInt 
   description String?
   tags PostTag[]
 
@@ -52,9 +51,4 @@ model PostTag {
   tag Tag @relation(fields: [tagId], references: [id])
 
   @@id([postId, tagId])
-}
-
-enum Role {
-  USER
-  ADMIN
 }
