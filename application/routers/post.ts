@@ -19,9 +19,9 @@ router.post(
     if (req.query.id) {
       const authorId = +req.query.id;
 
-      const { date, description } = req.body;
+      const { createdAt, description } = req.body;
 
-      const newPost = await createPost(authorId, date, description);
+      const newPost = await createPost(authorId, createdAt, description);
 
       resp.status(200);
       resp.send(newPost);

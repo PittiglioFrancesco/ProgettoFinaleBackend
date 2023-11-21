@@ -3,7 +3,7 @@ import { Prisma, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function login(email: string, password: string) {
-  const foundUser = await prisma.user.findUnique({
+  const foundUser = await prisma.users.findUnique({
     where: {
       email: email,
       password: password,
@@ -19,18 +19,18 @@ async function register(
   birthdate: number
 ) {
   const birthdateString = birthdate.toString();
-  const newProfile = await prisma.profile.create({
+  const newProfile = await prisma.users.create({
     data: {
-      username: username,
-      birthdate: birthdateString,
-      user: {
+      email: email,
+      password: password,
+      profiles: {
         create: {
-          email: email,
-          password: password,
-        },
-      },
-    },
-  });
+          username: username,
+          birthdate: birthdateString
+        }
+      }
+    }
+  })
 
   return newProfile;
 }

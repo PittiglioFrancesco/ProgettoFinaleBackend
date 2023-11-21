@@ -3,13 +3,13 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function readAllProfiles() {
-  const profiles = prisma.profile.findMany();
+  const profiles = prisma.profiles.findMany();
 
   return profiles;
 }
 
 async function readProfileById(id: number) {
-  const foundProfile = prisma.profile.findUnique({
+  const foundProfile = prisma.profiles.findUnique({
     where: {
       id: id,
     },
@@ -21,7 +21,7 @@ async function readProfileById(id: number) {
 async function updateProfile(id: number, username: string, birthdate: number) {
   const birthdateString = birthdate.toString();
 
-  const profile = prisma.profile.update({
+  const profile = prisma.profiles.update({
     where: {
       id: id,
     },
@@ -35,13 +35,13 @@ async function updateProfile(id: number, username: string, birthdate: number) {
 }
 
 async function deleteProfile(id: number) {
-//   const deletedProfile = prisma.profile.delete({
+//   const deletedProfile = prisma.profiles.delete({
 //     where: {
 //       id: id,
 //     },
 //   });
 
-  const deletedUser = prisma.user.delete({
+  const deletedUser = prisma.profiles.delete({
     where: {
       id: id,
     },

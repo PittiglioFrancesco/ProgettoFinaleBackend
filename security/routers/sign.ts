@@ -20,7 +20,7 @@ router.post("/api/v1/signup", async (req, resp, next: NextFunction) => {
 
   const payload: JwtPayloadId = {
     id: newProfile.id,
-    email: newProfile.username,
+    email: newProfile.email,
   };
 
   const token = sign(payload);

@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { createTag } from "./tag.service";
+import { createTag, createTagArray } from "./tag.service";
+import { createPostTag } from "./posttag.service";
 
 const prisma = new PrismaClient();
 
@@ -8,44 +9,32 @@ async function createPost(
   createdAt: string,
   description: string
 ) {
-  //   const createdAtString = createdAt.toString();
-
-  const descArray = description.split(" ");
-  const postTags: string[] = [];
-
-  descArray.forEach((str: string) => {
-    if (str.charAt(0) === "#") {
-      const tag = str.slice(1);
-      postTags.push(tag);
-    }
-  });
-
-  postTags.forEach((tag) => {
-    createTag(tag as string);
-  });
-
-
-  const newPost = await prisma.post.create({
+  const newPost = await prisma.posts.create({
     data: {
       description: description,
       createdAt: createdAt,
-      profile: {
-        connect: { userId: profileId },
-      },
+      profileId: profileId,
     },
+  });
+
+  const postTags = createTagArray(description);
+
+  postTags.forEach((tag) => {
+    createTag(tag as string);
+    createPostTag(newPost?.id, tag)
   });
 
   return newPost;
 }
 
 async function readAllPosts() {
-  const posts = prisma.post.findMany();
+  const posts = prisma.posts.findMany();
 
   return posts;
 }
 
 async function readPostById(id: number) {
-  const foundPost = prisma.post.findUnique({
+  const foundPost = prisma.posts.findUnique({
     where: {
       id: id,
     },
@@ -56,7 +45,7 @@ async function readPostById(id: number) {
 
 async function updatePost(id: number, description: string) {
   // aggiungere update tag
-  const post = prisma.post.update({
+  const post = prisma.posts.update({
     where: {
       id: id,
     },
@@ -69,9 +58,9 @@ async function updatePost(id: number, description: string) {
 }
 
 async function deletePost(id: number) {
-  const deletedPost = prisma.post.delete({
+  const deletedPost = prisma.posts.delete({
     where: {
-      id: id,
+      id: id
     },
   });
 
