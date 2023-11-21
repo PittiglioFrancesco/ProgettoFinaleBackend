@@ -7,6 +7,8 @@ import {
   readPostById,
   updatePost,
 } from "../services/post.service";
+import AuthorizationError from "../../security/error/AuthorizationError";
+import NotFoundError from "../error/NotFoundError";
 
 const router: Router = express.Router();
 
@@ -16,6 +18,14 @@ router.post(
   "/api/v1/post",
   authMiddleware,
   async (req, resp, next: NextFunction) => {
+    if (!req.query.id) {
+      next(new AuthorizationError("Errore inaspettato, ricaricare la pagina"));
+    }
+
+    if (req.query.id !== req.body.id) {
+      next(new AuthorizationError("Non autorizzato"));
+    }
+
     if (req.query.id) {
       const authorId = +req.query.id;
 
@@ -35,6 +45,10 @@ router.get(
   async (req, resp, next: NextFunction) => {
     const posts = await readAllPosts();
 
+    if (!posts) {
+      next(new NotFoundError("Nessun post trovato"))
+    }
+
     resp.status(200);
     resp.send(posts);
   }
@@ -47,6 +61,10 @@ router.get(
     const id = +req.params.id;
 
     const foundPost = await readPostById(id);
+
+    if (!foundPost) {
+      next(new NotFoundError("Post non trovato"));
+    }
 
     resp.status(200);
     resp.send(foundPost);
@@ -61,6 +79,10 @@ router.put(
     const id = +req.params.id;
 
     const updatedPost = await updatePost(id, description);
+
+    if (!updatedPost) {
+      next(new NotFoundError("Post non trovato"));
+    }
 
     resp.status(200);
     resp.send(updatedPost);

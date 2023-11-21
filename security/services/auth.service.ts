@@ -26,13 +26,23 @@ async function register(
       profiles: {
         create: {
           username: username,
-          birthdate: birthdateString
-        }
-      }
-    }
-  })
+          birthdate: birthdateString,
+        },
+      },
+    },
+  });
 
   return newProfile;
 }
 
-export { register, login };
+async function findUserByEmail(email: string) {
+  const foundUser = prisma.users.findUnique({
+    where: {
+      email: email,
+    },
+  });
+
+  return foundUser;
+}
+
+export { register, login, findUserByEmail };

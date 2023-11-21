@@ -2,6 +2,7 @@ import "dotenv/config";
 
 import express, { Application, NextFunction } from "express";
 import errorHandler from "./security/middleware/security.error.middleware";
+import errorHandler2 from "./application/middleware/client.error.middleware";
 
 import { authMiddleware } from "./security/middleware/auth.middleware";
 
@@ -21,6 +22,6 @@ app.get("/", (req, resp, next: NextFunction) => {
   resp.send(user);
 });
 
-app.use(errorHandler);
+app.use(errorHandler, errorHandler2);
 
 app.listen(8080);

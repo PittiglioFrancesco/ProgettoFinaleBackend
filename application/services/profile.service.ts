@@ -50,4 +50,14 @@ async function deleteProfile(id: number) {
   return deletedUser;
 }
 
-export { readAllProfiles, readProfileById, updateProfile, deleteProfile };
+async function findProfileByUsername(username: string) {
+  const foundProfile = prisma.profiles.findFirst({
+    where: {
+      username: username
+    },
+  });
+
+  return foundProfile;
+}
+
+export { readAllProfiles, readProfileById, updateProfile, deleteProfile, findProfileByUsername };

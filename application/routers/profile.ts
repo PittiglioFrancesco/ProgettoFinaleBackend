@@ -6,6 +6,7 @@ import {
   updateProfile,
 } from "../services/profile.service";
 import { authMiddleware } from "../../security/middleware/auth.middleware";
+import NotFoundError from "../error/NotFoundError";
 
 const router: Router = express.Router();
 
@@ -21,6 +22,10 @@ router.get(
   async (req, resp, next: NextFunction) => {
     const profiles = await readAllProfiles();
 
+    if (!profiles) {
+      next(new NotFoundError("Nessun profilo trovato"))
+    }
+
     resp.status(200);
     resp.send(profiles);
   }
@@ -33,6 +38,10 @@ router.get(
     const id = +req.params.id;
 
     const foundProfile = await readProfileById(id);
+
+    if (!foundProfile) {
+      next(new NotFoundError("Profilo non trovato"))
+    }
 
     resp.status(200);
     resp.send(foundProfile);
@@ -47,6 +56,10 @@ router.put(
     const id = +req.params.id;
 
     const updatedProfile = await updateProfile(id, username, birthdate);
+
+    if (!updateProfile) {
+      next(new NotFoundError("Profilo non trovato"))
+    }
 
     resp.status(200);
     resp.send(updatedProfile);
