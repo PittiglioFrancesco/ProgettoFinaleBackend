@@ -6,11 +6,12 @@ import errorHandler from "./security/middleware/security.error.middleware";
 import { authMiddleware } from "./security/middleware/auth.middleware";
 
 import signRouter from "./security/routers/sign";
-import profileUser from "./application/routers/profile";
+import profileRouter from "./application/routers/profile";
+import postRouter from "./application/routers/post";
 
 const app: Application = express();
 
-app.use(signRouter, profileUser);
+app.use(signRouter, profileRouter, postRouter);
 
 app.get("/", (req, resp, next: NextFunction) => {
   const user = {};
