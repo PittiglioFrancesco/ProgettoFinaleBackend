@@ -1,10 +1,13 @@
 import express, { NextFunction, Router } from "express";
-import { sign } from "../services/jwt.service";
-import {register, login, findUserByEmail } from "../services/auth.service";
+import { sign, verify } from "../services/jwt.service";
+import { register, login, findUserByEmail } from "../services/auth.service";
 import { JwtPayloadId } from "../types/security";
 import AuthenticationError from "../error/AuthenticationError";
-import { findProfileByUsername } from "../../application/services/profile.service";
-
+import {
+  findProfileByUsername,
+  readProfileById,
+} from "../../application/services/profile.service";
+import AuthorizationError from "../error/AuthorizationError";
 
 const router: Router = express.Router();
 
@@ -23,7 +26,9 @@ router.post("/api/v1/signup", async (req, resp, next: NextFunction) => {
   }
 
   if (foundProfile) {
-    next(new AuthenticationError("Username già registrato ad un altro account"));
+    next(
+      new AuthenticationError("Username già registrato ad un altro account")
+    );
   }
 
   const payload: JwtPayloadId = {
@@ -56,11 +61,27 @@ router.put("/api/v1/login", async (req, resp, next: NextFunction) => {
 
     const token = sign(payload);
 
+    const foundProfile = await readProfileById(foundUser.id);
+
     resp.status(200);
     resp.send({
       token: token,
+      ...foundProfile,
     });
   }
+});
+
+router.get("/api/v1/verify", async (req, resp, next: NextFunction) => {
+  const { token } = req.body;
+
+  const decodedtoken = verify(token);
+
+  if (!decodedtoken) {
+    next(new AuthorizationError("effettua il login"));
+  }
+
+  resp.status(200);
+  resp.send(decodedtoken);
 });
 
 export default router;

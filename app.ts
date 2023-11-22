@@ -1,4 +1,5 @@
 import "dotenv/config";
+import cors from "cors";
 
 import express, { Application, NextFunction } from "express";
 import errorHandler from "./security/middleware/security.error.middleware";
@@ -13,6 +14,8 @@ import tagRouter from "./application/routers/tag"
 
 const app: Application = express();
 
+app.use(cors())
+
 app.use(signRouter, profileRouter, postRouter, tagRouter);
 
 app.get("/", (req, resp, next: NextFunction) => {
@@ -22,6 +25,6 @@ app.get("/", (req, resp, next: NextFunction) => {
   resp.send(user);
 });
 
-app.use(errorHandler, errorHandler2);
+app.use(errorHandler);
 
 app.listen(8080);
