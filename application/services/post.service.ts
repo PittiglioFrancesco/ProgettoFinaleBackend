@@ -43,6 +43,16 @@ async function readPostById(id: number) {
   return foundPost;
 }
 
+async function readAllPostsOfProfile(id: number) {
+  const foundPost = prisma.posts.findMany({
+    where: {
+      profileId: id,
+    },
+  });
+
+  return foundPost;
+}
+
 async function updatePost(id: number, description: string) {
   // aggiungere update tag
   const post = prisma.posts.update({
@@ -67,4 +77,4 @@ async function deletePost(id: number) {
   return deletedPost;
 }
 
-export { createPost, readAllPosts, readPostById, updatePost, deletePost };
+export { createPost, readAllPosts, readPostById, readAllPostsOfProfile, updatePost, deletePost };

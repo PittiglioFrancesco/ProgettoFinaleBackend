@@ -4,6 +4,7 @@ import {
   createPost,
   deletePost,
   readAllPosts,
+  readAllPostsOfProfile,
   readPostById,
   updatePost,
 } from "../services/post.service";
@@ -46,7 +47,7 @@ router.get(
     const posts = await readAllPosts();
 
     if (!posts) {
-      next(new NotFoundError("Nessun post trovato"))
+      next(new NotFoundError("Nessun post trovato"));
     }
 
     resp.status(200);
@@ -68,6 +69,23 @@ router.get(
 
     resp.status(200);
     resp.send(foundPost);
+  }
+);
+
+router.get(
+  "/api/v1/profileposts",
+  authMiddleware,
+  async (req, resp, next: NextFunction) => {
+    const id = +req.body.id;
+
+    const foundPosts = await readAllPostsOfProfile(id);
+
+    if (!foundPosts) {
+      next(new NotFoundError("Post non trovato"));
+    }
+
+    resp.status(200);
+    resp.send(foundPosts);
   }
 );
 

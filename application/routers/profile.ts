@@ -1,6 +1,7 @@
 import express, { NextFunction, Router } from "express";
 import {
   deleteProfile,
+  getFirstFiveProfiles,
   readAllProfiles,
   readProfileById,
   updateProfile,
@@ -21,6 +22,21 @@ router.get(
   authMiddleware,
   async (req, resp, next: NextFunction) => {
     const profiles = await readAllProfiles();
+
+    if (!profiles) {
+      next(new NotFoundError("Nessun profilo trovato"))
+    }
+
+    resp.status(200);
+    resp.send(profiles);
+  }
+);
+
+router.get(
+  "/api/v1/profile/firstfive",
+  authMiddleware,
+  async (req, resp, next: NextFunction) => {
+    const profiles = await getFirstFiveProfiles();
 
     if (!profiles) {
       next(new NotFoundError("Nessun profilo trovato"))

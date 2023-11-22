@@ -35,11 +35,11 @@ async function updateProfile(id: number, username: string, birthdate: number) {
 }
 
 async function deleteProfile(id: number) {
-//   const deletedProfile = prisma.profiles.delete({
-//     where: {
-//       id: id,
-//     },
-//   });
+  //   const deletedProfile = prisma.profiles.delete({
+  //     where: {
+  //       id: id,
+  //     },
+  //   });
 
   const deletedUser = prisma.profiles.delete({
     where: {
@@ -53,11 +53,27 @@ async function deleteProfile(id: number) {
 async function findProfileByUsername(username: string) {
   const foundProfile = prisma.profiles.findFirst({
     where: {
-      username: username
+      username: username,
     },
   });
 
   return foundProfile;
 }
 
-export { readAllProfiles, readProfileById, updateProfile, deleteProfile, findProfileByUsername };
+async function getFirstFiveProfiles() {
+  const profiles = prisma.profiles.findMany({
+    skip: 0,
+    take: 5,
+  });
+
+  return profiles;
+}
+
+export {
+  readAllProfiles,
+  readProfileById,
+  updateProfile,
+  deleteProfile,
+  findProfileByUsername,
+  getFirstFiveProfiles,
+};
